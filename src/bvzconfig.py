@@ -162,7 +162,7 @@ class Config(object):
     def get_list(self,
                  section) -> list:
         """
-        Given a section, returns all of the items in that section as a list.
+        Given a section, returns all of the items in that section as a list of strings.
 
         :param section:
                 The name of the section to return.
@@ -178,9 +178,9 @@ class Config(object):
         return items
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_item(self,
-                 section,
-                 item) -> str:
+    def _get_item(self,
+                  section,
+                  item) -> str:
         """
         Given a section and an item in that section, returns the value of this item.
 
@@ -199,3 +199,178 @@ class Config(object):
         value = self.delimited_config_obj.get(section, item)
 
         return value
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def has_option(self,
+                   section,
+                   item):
+        """
+        Returns True if the section and item exists. Essentially a wrapper for the configparser has_option function.
+
+        :param section:
+                The section.
+        :param item:
+                The item.
+
+        :return:
+                True if the section and item exist. False otherwise.
+        """
+
+        return self.delimited_config_obj.has_option(section, item)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def options(self,
+                section):
+        """
+        Just a wrapper for the config parser options function.
+
+        :param section:
+                The section we want the options from.
+
+        :return:
+                A list of options.
+        """
+
+        return self.delimited_config_obj.options(section)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def get_string(self,
+                   section,
+                   item) -> str:
+        """
+        Just a re-branding of _get_item for consistency with the other get functions.
+
+
+        :param section:
+                The name of the section that contains the item.
+        :param item:
+                The name of the item to return
+
+        :return:
+                The value of the item for this section.
+        """
+
+        result = self._get_item(section, item)
+        if result is None:
+            result = ""
+        return result
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def get_integer(self,
+                    section,
+                    item) -> str:
+        """
+        Converts the item retreived to be an integer.
+
+
+        :param section:
+                The name of the section that contains the item.
+        :param item:
+                The name of the item to return
+
+        :return:
+                The value of the item for this section as an integer. If the item cannot be converted to an integer, a
+                ValueError is raised.
+        """
+
+        return int(self._get_item(section, item))
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def get_boolean(self,
+                    section,
+                    item) -> str:
+        """
+        Converts the item retreived to be a boolean.
+
+
+        :param section:
+                The name of the section that contains the item.
+        :param item:
+                The name of the item to return
+
+        :return:
+                The value of the item for this section as a boolean. Accepts True, False (and any case variant of that),
+                Yes, No (and their case variants), 0 and 1. Any other values will trigger a ValueError.
+        """
+
+        value = self._get_item(section, item)
+        if value.upper() in ["TRUE", "YES", "1"]:
+            return True
+        if value.upper() in ["FALSE", "NO", "0"]:
+            return False
+        raise ValueError()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def replace_section(self,
+                        section,
+                        items):
+        """
+        Given a dictionary of items, replces all of the existing section (or creates a new section) with the items from
+        the dictionary.
+
+        :param section:
+                The name of the section to replace (or create if it does not exist).
+
+        :param items:
+                A dictionary of items where the key is the option name and the value is the value.
+
+        :return:
+                Nothing.
+        """
+
+        self.delimited_config_obj.remove_section(section)
+        self.undelimited_config_obj.remove_section(section)
+
+        self.delimited_config_obj.add_section(section)
+        self.undelimited_config_obj.add_section(section)
+
+        self.merge_section(section, items)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def merge_section(self,
+                      section,
+                      items):
+        """
+        Given a dictionary of items, merges the items with the items in already existing in the section. If the section
+        does not exist, creates a new one. If an item already exists in the section but is not in the dictionary passed,
+        then the item is left alone in that section. If the item exists in both the section and the dictionary, then the
+        item will take on the value from the dictionary. If the item is new in the dictionary, it will be added to the
+        section.
+
+        :param section:
+                The name of the section to merge (or create if it does not exist).
+
+        :param items:
+                A dictionary of items where the key is the option name and the value is the value.
+
+        :return:
+                Nothing.
+        """
+
+        for key, value in items.items():
+            self.delimited_config_obj.set(section, key, value)
+            self.undelimited_config_obj.set(section, key, value)
+        pass
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def get_config_path(self):
+        """
+        Returns the path to the config file being used.
+
+        :return:
+                The path to the config file being used.
+        """
+
+        return self.config_p
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def save(self):
+        """
+        Saves the existing configparser back to disk.
+
+        :return:
+                Nothing.
+        """
+
+        with open(self.config_p, "w") as f:
+            self.delimited_config_obj.write(f)
