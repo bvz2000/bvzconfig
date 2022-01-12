@@ -8,14 +8,14 @@ from bvzconfigerror import ConfigError
 # ======================================================================================================================
 class Config(object):
     """
-    Class to manage configurations. Subclassed from the default python config parser.
+M    Class to manage configurations.
     """
 
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
                  config_p):
         """
-        Setup this subclass of the default python config parser.
+        Setup this wrapper of the default python config parser.
 
         :param config_p:
                 The path to the config file.
@@ -23,6 +23,8 @@ class Config(object):
         :return:
                 Nothing.
         """
+
+        assert type(config_p) is str
 
         self.config_p = config_p
 
@@ -52,6 +54,8 @@ class Config(object):
                 A configParser object.
         """
 
+        assert type(config_p) is str
+
         config_obj = configparser.ConfigParser(allow_no_value=True,
                                                delimiters="=",
                                                empty_lines_in_values=True)
@@ -77,6 +81,8 @@ class Config(object):
         :return:
                 A configParser object.
         """
+
+        assert type(config_p) is str
 
         config_obj = configparser.ConfigParser(allow_no_value=True,
                                                delimiters="\n",
@@ -109,7 +115,7 @@ class Config(object):
         :return:
                 If the validation fails, returns a three item tuple where the first item is section that failed. The
                 second item will either be None (if it is the entire section that is missing) or it will be the item
-                that was missing from that section (if the section exists, but the item is missing. The third item will
+                that was missing from that section (if the section exists, but the item is missing). The third item will
                 either be None if it is one of the previous two types of failures, or a string indicating what the data
                 type should have been, but isn't. If the validation succeeds, returns None.
         """
@@ -216,6 +222,9 @@ class Config(object):
                 True if the section and item exist. False otherwise.
         """
 
+        assert type(section) is str
+        assert type(item) is str
+
         return self.delimited_config_obj.has_option(section, item)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -230,6 +239,8 @@ class Config(object):
         :return:
                 A list of options.
         """
+
+        assert type(section) is str
 
         return self.delimited_config_obj.options(section)
 
@@ -249,6 +260,9 @@ class Config(object):
         :return:
                 The value of the item for this section.
         """
+
+        assert type(section) is str
+        assert type(item) is str
 
         result = self._get_item(section, item)
         if result is None:
@@ -273,6 +287,9 @@ class Config(object):
                 ValueError is raised.
         """
 
+        assert type(section) is str
+        assert type(item) is str
+
         return int(self._get_item(section, item))
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -293,10 +310,13 @@ class Config(object):
                 Yes, No (and their case variants), 0 and 1. Any other values will trigger a ValueError.
         """
 
+        assert type(section) is str
+        assert type(item) is str
+
         value = self._get_item(section, item)
-        if value.upper() in ["TRUE", "YES", "1"]:
+        if value.upper() in ["TRUE", "T", "YES", "Y", "ON", "1"]:
             return True
-        if value.upper() in ["FALSE", "NO", "0"]:
+        if value.upper() in ["FALSE", "F", "NO", "N", "OFF", "0"]:
             return False
         raise ValueError()
 
@@ -317,6 +337,9 @@ class Config(object):
         :return:
                 Nothing.
         """
+
+        assert type(section) is str
+        assert type(items) is dict
 
         self.delimited_config_obj.remove_section(section)
         self.undelimited_config_obj.remove_section(section)
@@ -346,6 +369,9 @@ class Config(object):
         :return:
                 Nothing.
         """
+
+        assert type(section) is str
+        assert type(items) is dict
 
         for key, value in items.items():
             self.delimited_config_obj.set(section, key, value)
