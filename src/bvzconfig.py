@@ -4,11 +4,11 @@ import os
 
 from bvzconfigerror import ConfigError
 
-
+# TODO: Convert this to be a subclass of the config parser vs. being a wrapper.
 # ======================================================================================================================
 class Config(object):
     """
-M    Class to manage configurations.
+    Class to manage configurations.
     """
 
     # ------------------------------------------------------------------------------------------------------------------
