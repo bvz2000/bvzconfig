@@ -4,6 +4,7 @@ import os
 
 from bvzconfigerror import ConfigError
 
+
 # TODO: Convert this to be a subclass of the config parser vs. being a wrapper.
 # ======================================================================================================================
 class Config(object):
@@ -109,7 +110,7 @@ class Config(object):
                 but there is no hard and fast rule about the entries, just set this list of items for this section to
                 be = None.
 
-                For example: {"section_name": [("count", "int"), ("do_something", "bool")}
+                For example: {"section_name": [("count", "int"), ("do_something", "bool")]}
                              {"possibly_empty_section": None}
 
         :return:
@@ -146,7 +147,7 @@ class Config(object):
         # All good
         return None
     #
-    # # ------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     # def save(self):
     #     """
     #     Writes the config parser back out to disk.
@@ -174,7 +175,7 @@ class Config(object):
                 The name of the section to return.
 
         :return:
-                A list containing all of the items in this seciton. One line = 1 item in the list.
+                A list containing all of the items in this section. One line = 1 item in the list.
         """
 
         assert type(section) is str
@@ -272,9 +273,9 @@ class Config(object):
     # ------------------------------------------------------------------------------------------------------------------
     def get_integer(self,
                     section,
-                    item) -> str:
+                    item) -> int:
         """
-        Converts the item retreived to be an integer.
+        Converts the item retrieved to be an integer.
 
 
         :param section:
@@ -295,9 +296,9 @@ class Config(object):
     # ------------------------------------------------------------------------------------------------------------------
     def get_boolean(self,
                     section,
-                    item) -> str:
+                    item) -> bool:
         """
-        Converts the item retreived to be a boolean.
+        Converts the item retrieved to be a boolean.
 
 
         :param section:
@@ -325,7 +326,7 @@ class Config(object):
                         section,
                         items):
         """
-        Given a dictionary of items, replces all of the existing section (or creates a new section) with the items from
+        Given a dictionary of items, replaces all of the existing section (or creates a new section) with the items from
         the dictionary.
 
         :param section:
