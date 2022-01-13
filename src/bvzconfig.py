@@ -375,8 +375,8 @@ class Config(object):
         assert type(items) is dict
 
         for key, value in items.items():
-            self.delimited_config_obj.set(section, key, value)
-            self.undelimited_config_obj.set(section, key, value)
+            self.delimited_config_obj.set(section, key, str(value))
+            self.undelimited_config_obj.set(section, key, str(value))
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
