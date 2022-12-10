@@ -5,7 +5,6 @@ import os
 from bvzconfigerror import ConfigError
 
 
-# TODO: Convert this to be a subclass of the config parser vs. being a wrapper.
 # ======================================================================================================================
 class Config(object):
     """
@@ -146,24 +145,6 @@ class Config(object):
 
         # All good
         return None
-    #
-    # ------------------------------------------------------------------------------------------------------------------
-    # def save(self):
-    #     """
-    #     Writes the config parser back out to disk.
-    #
-    #     :return:
-    #             Nothing.
-    #     """
-    #
-    #     try:
-    #         with open(self.config_p, "w") as f:
-    #             self.write(f)
-    #     except IOError as err:
-    #         if err.errno == 13:
-    #             raise IOError("You do not have write permission for: " + self.config_p)
-    #         else:
-    #             raise
 
     # ------------------------------------------------------------------------------------------------------------------
     def get_list(self,
